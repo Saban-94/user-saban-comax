@@ -1,4 +1,4 @@
-import { createFileRoute } from "@tanstack/react-router";
+import { createFileRoute, Link } from "@tanstack/react-router";
 import {
   ArrowLeft,
   Truck,
@@ -57,7 +57,10 @@ function Index() {
           </div>
           <div className="header-actions">
             <span className="header-link">בונים איתכם מאז 1994</span>
-            <Button onClick={scrollToForm} variant="outline">
+            <Link to="/bank-transfer" className="header-nav-link">
+              העברה בנקאית
+            </Link>
+            <Button onClick={scrollToForm} variant="outline" className="whitespace-nowrap shrink-0">
               פתיחת כרטיס לקוח <ArrowLeft />
             </Button>
           </div>
@@ -151,7 +154,10 @@ function Index() {
       <footer className="site-footer">
         <div className="container footer-inner">
           <strong>ח. סבן חומרי בניין (1994) בע״מ</strong>
-          <span>חומרי בניין • אספקה • שירות אישי</span>
+          <span>
+            חומרי בניין • אספקה • שירות אישי ·{" "}
+            <Link to="/bank-transfer">העברה בנקאית ושליחת אסמכתא</Link>
+          </span>
           <span>© 2026 ח. סבן. כל הזכויות שמורות.</span>
         </div>
       </footer>

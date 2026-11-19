@@ -470,6 +470,141 @@ function doGet(e) {
   }
 }
 
+const RECEIPTS_CONFIG = {
+  SHEET_NAME: "אסמכתאות העברה בנקאית",
+  FOLDER_NAME: "אסמכתאות העברה בנקאית — ח. סבן",
+};
+
+/**
+ * מוודא קיום תיקיית Google Drive לאסמכתאות העברה בנקאית
+ * @returns {GoogleAppsScript.Drive.Folder}
+ */
+function ensureReceiptsDriveFolder_() {
+  const folders = DriveApp.getFoldersByName(RECEIPTS_CONFIG.FOLDER_NAME);
+  if (folders.hasNext()) {
+    return folders.next();
+  }
+  return DriveApp.createFolder(RECEIPTS_CONFIG.FOLDER_NAME);
+}
+
+/**
+ * יוצר ומעצב טאב "אסמכתאות העברה בנקאית" בעברית מלאה
+ * @returns {GoogleAppsScript.Spreadsheet.Sheet}
+ */
+function ensureReceiptsSheet_() {
+  const ss = SpreadsheetApp.getActiveSpreadsheet();
+  let sheet = ss.getSheetByName(RECEIPTS_CONFIG.SHEET_NAME);
+  if (sheet) return sheet;
+
+  sheet = ss.insertSheet(RECEIPTS_CONFIG.SHEET_NAME);
+  sheet.setRightToLeft(true);
+  sheet.setTabColor(CONFIG.COLORS.BRAND_BLUE);
+
+  const headers = [
+    "מספר אסמכתא",
+    "תאריך ושעה",
+    "סטטוס שיוך",
+    "שם לקוח / עסק",
+    "מספר הזמנה / טלפון",
+    "סכום העברה",
+    "שם קובץ",
+    "קישור לקובץ בדרייב",
+    "הערות",
+  ];
+  const widths = [130, 150, 155, 200, 170, 120, 210, 260, 240];
+
+  sheet
+    .getRange(1, 1, 1, headers.length)
+    .merge()
+    .setValue("ח. סבן חומרי בניין (1994) בע״מ  |  אסמכתאות העברה בנקאית (Drive + גיליון)")
+    .setBackground(CONFIG.COLORS.BRAND_BLUE)
+    .setFontColor(CONFIG.COLORS.WHITE)
+    .setFontFamily(CONFIG.FONT_FAMILY)
+    .setFontSize(13)
+    .setFontWeight("bold")
+    .setHorizontalAlignment("right")
+    .setVerticalAlignment("middle");
+  sheet.setRowHeight(1, 42);
+
+  sheet
+    .getRange(2, 1, 1, headers.length)
+    .setValues([headers])
+    .setBackground(CONFIG.COLORS.BRAND_DARK)
+    .setFontColor(CONFIG.COLORS.WHITE)
+    .setFontFamily(CONFIG.FONT_FAMILY)
+    .setFontSize(10)
+    .setFontWeight("bold")
+    .setHorizontalAlignment("center")
+    .setVerticalAlignment("middle");
+  sheet.setRowHeight(2, 34);
+  sheet.setFrozenRows(2);
+
+  widths.forEach((w, idx) => sheet.setColumnWidth(idx + 1, w));
+  return sheet;
+}
+
+/**
+ * שומר קובץ אסמכתא בנקאית ב-Google Drive ומתעד בגיליון
+ * @param {Object} body
+ */
+function handleUploadReceipt_(body) {
+  const d = body && body.data ? body.data : body || {};
+  const base64 = safeStr_(d.base64Data);
+  const fileName = safeStr_(d.fileName) || "bank-receipt.jpg";
+  const mimeType = safeStr_(d.mimeType) || "image/jpeg";
+  if (!base64) {
+    return jsonResponse_({ ok: false, error: "לא התקבל קובץ אסמכתא" });
+  }
+
+  const reference = safeStr_(body.reference || Utilities.getUuid().slice(0, 8)).toUpperCase();
+  const folder = ensureReceiptsDriveFolder_();
+  const bytes = Utilities.base64Decode(base64);
+  const safeFileName = reference + "_" + fileName;
+  const blob = Utilities.newBlob(bytes, mimeType, safeFileName);
+  const file = folder.createFile(blob);
+
+  try {
+    file.setSharing(DriveApp.Access.ANYONE_WITH_LINK, DriveApp.Permission.VIEW);
+  } catch (shareErr) {
+    // ארגונים מסוימים חוסמים שיתוף חיצוני — הקובץ עדיין נשמר בדרייב
+  }
+
+  const driveUrl = file.getUrl();
+  const sheet = ensureReceiptsSheet_();
+  const nowFormatted = Utilities.formatDate(new Date(), CONFIG.TIMEZONE, "dd/MM/yyyy HH:mm:ss");
+  const nextRow = Math.max(sheet.getLastRow() + 1, 3);
+
+  sheet
+    .getRange(nextRow, 1, 1, 9)
+    .setValues([
+      [
+        reference,
+        nowFormatted,
+        "ממתין לשיוך להזמנה",
+        safeStr_(d.customerName),
+        safeStr_(d.orderOrPhone),
+        safeStr_(d.amount),
+        safeFileName,
+        driveUrl,
+        safeStr_(d.notes),
+      ],
+    ])
+    .setFontFamily(CONFIG.FONT_FAMILY)
+    .setFontSize(10)
+    .setVerticalAlignment("middle");
+
+  SpreadsheetApp.flush();
+
+  return jsonResponse_({
+    ok: true,
+    uploadedToDrive: true,
+    reference: reference,
+    fileId: file.getId(),
+    driveUrl: driveUrl,
+    sheetName: RECEIPTS_CONFIG.SHEET_NAME,
+  });
+}
+
 /**
  * נקודת קצה POST לקליטת פניות אונליין מהממשק ועדכון סטטוס בזמן אמת
  * @param {GoogleAppsScript.Events.DoPost} e
@@ -486,6 +621,10 @@ function doPost(e) {
     if (action === "setup") {
       const sheet = createCustomerRegistrationTab();
       return jsonResponse_({ ok: true, sheetName: sheet.getName() });
+    }
+
+    if (action === "uploadReceipt") {
+      return handleUploadReceipt_(body);
     }
 
     const sheet = ensureRegistrationSheet_();

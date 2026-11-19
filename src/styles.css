@@ -60,3 +60,122 @@
 .consent-ok-inline { display:inline-flex; align-items:center; gap:3px; margin-inline-start:8px; color:var(--success); font-weight:600; font-size:11px; }
 @media (max-width:640px) { .guidance-legend { grid-template-columns:1fr; } .progress-ticker { flex-wrap:wrap; } .ticker-dots { width:100%; justify-content:center; } }
 
+.header-nav-link { font-size:13px; font-weight:600; color:var(--brand); padding:7px 12px; border-radius:6px; border:1px solid var(--border); background:var(--aside); white-space:nowrap; flex-shrink:0; transition:background-color 160ms ease, border-color 160ms ease; }
+.header-nav-link:hover { background:var(--secondary); border-color:var(--brand); }
+.footer-inner a { color:var(--brand); font-weight:500; }
+.footer-inner a:hover { text-decoration:underline; }
+
+/* Bank transfer landing page (/bank-transfer) */
+.bank-page { min-height:100vh; display:flex; flex-direction:column; background:var(--background); }
+.bank-page main { flex:1; }
+.bank-header-inner { height:100%; display:flex; align-items:center; justify-content:space-between; gap:24px; }
+.brand-wordmark { display:inline-flex; align-items:center; gap:12px; font-size:15px; font-weight:700; color:var(--foreground); white-space:nowrap; flex-shrink:0; }
+.brand-wordmark .brand-logo { width:84px; height:60px; }
+.bank-nav { display:flex; align-items:center; gap:24px; }
+.bank-nav-link { font-size:13px; font-weight:500; color:var(--muted-foreground); white-space:nowrap; transition:color 160ms ease; }
+.bank-nav-link:hover { color:var(--brand); }
+
+.bank-hero-section { padding:42px 0 52px; background:linear-gradient(180deg, var(--aside) 0%, var(--background) 100%); border-bottom:1px solid var(--border); }
+.bank-presenter-grid { display:grid; grid-template-columns:minmax(280px, 410px) minmax(0, 1fr); gap:36px; align-items:stretch; }
+
+.presenter-frame { position:relative; border:1px solid var(--border); border-radius:10px; overflow:hidden; background:var(--background); box-shadow:var(--shadow); display:flex; flex-direction:column; min-height:480px; }
+.presenter-photo { width:100%; flex:1; min-height:400px; object-fit:cover; object-position:center top; display:block; }
+.presenter-caption { padding:14px 18px; background:var(--background); border-top:1px solid var(--border); display:flex; flex-direction:column; gap:3px; }
+.presenter-caption strong { font-size:13px; font-weight:700; color:var(--brand); }
+.presenter-caption span { font-size:12px; color:var(--muted-foreground); }
+
+.bank-details-panel { display:flex; flex-direction:column; justify-content:center; gap:18px; min-width:0; }
+.cobrand-row { display:inline-flex; align-items:center; gap:16px; padding:10px 16px; background:var(--background); border:1px solid var(--border); border-radius:8px; width:fit-content; max-width:100%; flex-wrap:wrap; }
+.cobrand-saban-logo { width:84px; height:58px; object-fit:contain; }
+.cobrand-divider { width:1px; height:34px; background:var(--border); }
+.mizrahi-lockup { display:inline-flex; align-items:center; gap:10px; }
+.mizrahi-text { display:flex; flex-direction:column; line-height:1.35; }
+.mizrahi-text strong { font-size:14px; font-weight:700; color:#002F6C; }
+.mizrahi-text span { font-size:11px; color:var(--muted-foreground); }
+
+.bank-details-panel h1 { font-size:40px; font-weight:800; line-height:1.15; margin:0; color:var(--foreground); }
+.bank-subtitle { margin:0; font-size:15px; line-height:1.75; color:var(--muted-foreground); max-width:580px; }
+
+.bank-card { background:var(--background); border:1px solid var(--border); border-radius:10px; padding:22px 24px; box-shadow:var(--shadow); display:flex; flex-direction:column; gap:18px; }
+.bank-card-header { display:flex; align-items:center; gap:9px; font-size:14px; font-weight:700; color:var(--brand); padding-bottom:12px; border-bottom:1px solid var(--border); }
+.bank-beneficiary { display:flex; flex-direction:column; gap:4px; }
+.bank-beneficiary span { font-size:12px; color:var(--muted-foreground); }
+.bank-beneficiary strong { font-size:19px; font-weight:700; color:var(--foreground); }
+
+.bank-numbers-grid { display:grid; grid-template-columns:repeat(3, minmax(0, 1fr)); gap:12px; }
+.bank-stat { background:var(--aside); border:1px solid var(--border); border-radius:8px; padding:12px 14px; display:flex; flex-direction:column; gap:4px; }
+.bank-stat span { font-size:11px; color:var(--muted-foreground); font-weight:500; }
+.bank-stat strong { font-size:18px; font-weight:800; color:var(--foreground); font-variant-numeric:tabular-nums; }
+
+.bank-copy-actions { display:flex; align-items:center; gap:10px; flex-wrap:wrap; padding-top:4px; }
+
+.bank-instruction-bar { display:flex; align-items:center; gap:12px; padding:14px 18px; border-radius:8px; border:1px solid oklch(.88 .08 91); background:oklch(.985 .015 91); }
+.bank-instruction-bar svg { color:var(--brand); flex-shrink:0; }
+.bank-instruction-bar div { display:flex; flex-direction:column; gap:2px; }
+.bank-instruction-bar strong { font-size:14px; font-weight:700; color:var(--foreground); }
+.bank-instruction-bar span { font-size:12px; color:var(--muted-foreground); }
+
+.bank-upload-section { padding:48px 0 60px; scroll-margin-top:20px; }
+.bank-upload-container { max-width:860px; }
+.bank-upload-intro { text-align:center; margin-bottom:28px; }
+.bank-upload-intro h2 { font-size:30px; font-weight:800; margin:8px 0 8px; }
+.bank-upload-intro p { margin:0 auto; max-width:600px; font-size:14px; line-height:1.8; color:var(--muted-foreground); }
+
+.bank-upload-form { background:var(--background); border:1px solid var(--border); border-radius:10px; padding:28px 30px; box-shadow:var(--shadow); display:flex; flex-direction:column; gap:20px; }
+.receipt-dropzone { display:block; border:1.5px dashed var(--border); border-radius:8px; background:var(--aside); padding:26px 20px; text-align:center; cursor:pointer; transition:border-color 180ms ease, background-color 180ms ease; }
+.receipt-dropzone:hover { border-color:var(--brand); background:oklch(.97 .01 255); }
+.receipt-dropzone.selected { border-style:solid; border-color:var(--success); background:oklch(.98 .02 150); }
+.dropzone-content { display:flex; flex-direction:column; align-items:center; gap:6px; }
+.dropzone-content strong { font-size:14px; font-weight:700; color:var(--foreground); }
+.dropzone-content span { font-size:12px; color:var(--muted-foreground); }
+.dropzone-icon { color:var(--brand); }
+.dropzone-icon-ok { color:var(--success); }
+
+.bank-error-banner { margin:0; display:flex; align-items:center; gap:8px; padding:11px 14px; border-radius:6px; background:oklch(.98 .018 25); border:1px solid var(--destructive); color:var(--destructive); font-size:13px; font-weight:500; }
+.bank-submit-row { display:flex; align-items:center; justify-content:space-between; gap:14px; padding-top:16px; border-top:1px solid var(--border); }
+
+.uploaded-result-block { margin-top:26px; display:flex; flex-direction:column; gap:16px; }
+.receipt-confirm-banner { display:flex; align-items:center; justify-content:space-between; gap:16px; flex-wrap:wrap; padding:16px 20px; border-radius:8px; background:oklch(.97 .025 150); border:1px solid var(--success); }
+.receipt-confirm-title { display:flex; align-items:flex-start; gap:12px; color:var(--success); }
+.receipt-confirm-title svg { flex-shrink:0; margin-top:2px; }
+.receipt-confirm-title div { display:flex; flex-direction:column; gap:3px; }
+.receipt-confirm-title strong { font-size:15px; font-weight:700; color:oklch(.34 .11 150); }
+.receipt-confirm-title span { font-size:12px; color:var(--foreground); line-height:1.6; }
+.drive-link-btn { display:inline-flex; align-items:center; gap:6px; padding:8px 14px; border-radius:6px; border:1px solid var(--success); background:var(--background); color:var(--success); font-size:12px; font-weight:600; white-space:nowrap; }
+.drive-link-btn:hover { background:oklch(.94 .03 150); }
+
+.receipt-preview-card { border:1px solid var(--border); border-radius:10px; overflow:hidden; background:var(--background); box-shadow:var(--shadow); }
+.receipt-preview-header { display:flex; align-items:center; justify-content:space-between; gap:12px; flex-wrap:wrap; padding:14px 20px; background:var(--aside); border-bottom:1px solid var(--border); }
+.receipt-preview-meta { display:flex; align-items:center; gap:10px; color:var(--brand); }
+.receipt-preview-meta div { display:flex; flex-direction:column; gap:2px; }
+.receipt-preview-meta strong { font-size:13px; font-weight:700; color:var(--foreground); }
+.receipt-preview-meta span { font-size:11px; color:var(--muted-foreground); }
+.receipt-verified-label { display:inline-flex; align-items:center; gap:5px; font-size:12px; font-weight:700; color:var(--success); background:var(--background); border:1px solid oklch(.80 .08 150); padding:4px 10px; border-radius:6px; white-space:nowrap; }
+
+.receipt-media-frame { padding:20px; background:var(--muted); display:flex; justify-content:center; align-items:center; }
+.receipt-image-viewer { max-width:100%; max-height:540px; width:auto; height:auto; border-radius:6px; border:1px solid var(--border); background:var(--background); object-fit:contain; }
+.receipt-pdf-viewer { width:100%; height:520px; border:1px solid var(--border); border-radius:6px; background:var(--background); }
+.pdf-fallback { margin:0; padding:24px; text-align:center; font-size:13px; color:var(--muted-foreground); }
+
+@media (max-width:900px) {
+  .bank-presenter-grid { grid-template-columns:1fr; gap:26px; }
+  .presenter-frame { min-height:380px; max-width:440px; margin-inline:auto; width:100%; }
+  .bank-nav { display:none; }
+}
+
+@media (max-width:640px) {
+  .brand-wordmark span { display:none; }
+  .header-nav-link { font-size:12px; padding:6px 9px; }
+  .bank-hero-section { padding:26px 0 36px; }
+  .bank-details-panel h1 { font-size:32px; }
+  .bank-numbers-grid { grid-template-columns:1fr; }
+  .bank-card { padding:18px 16px; }
+  .bank-upload-section { padding:34px 0 44px; }
+  .bank-upload-intro h2 { font-size:25px; }
+  .bank-upload-form { padding:20px 16px; }
+  .bank-upload-form .fields-grid { grid-template-columns:1fr; }
+  .bank-submit-row { flex-direction:column; align-items:stretch; }
+  .bank-submit-row button { width:100%; }
+  .receipt-media-frame { padding:12px; }
+  .receipt-pdf-viewer { height:380px; }
+}
