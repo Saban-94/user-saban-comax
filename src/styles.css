@@ -178,4 +178,19 @@
   .bank-submit-row button { width:100%; }
   .receipt-media-frame { padding:12px; }
   .receipt-pdf-viewer { height:380px; }
+  .bank-page .site-footer { padding-bottom:88px; }
 }
+
+.floating-whatsapp-btn { position:fixed; bottom:24px; left:24px; z-index:50; display:inline-flex; align-items:center; gap:10px; padding:10px 18px 10px 15px; border-radius:999px; background:#16a34a; color:#ffffff; border:1px solid #15803d; box-shadow:0 10px 26px oklch(.32 .1 150 / .28); transition:transform 160ms ease, background-color 160ms ease, box-shadow 160ms ease; }
+.floating-whatsapp-btn:hover { background:#15803d; transform:translateY(-2px); box-shadow:0 14px 30px oklch(.30 .1 150 / .34); }
+.floating-whatsapp-btn:focus-visible { outline:2px solid var(--brand); outline-offset:3px; }
+.floating-whatsapp-text { display:flex; flex-direction:column; line-height:1.25; text-align:right; }
+.floating-whatsapp-text strong { font-size:13px; font-weight:700; white-space:nowrap; }
+.floating-whatsapp-text small { font-size:11px; opacity:.92; white-space:nowrap; }
+
+@media (max-width:640px) {
+  .floating-whatsapp-btn { bottom:16px; left:16px; padding:9px 15px 9px 13px; }
+  .floating-whatsapp-text strong { font-size:12px; }
+  .floating-whatsapp-text small { font-size:10px; }
+}
+

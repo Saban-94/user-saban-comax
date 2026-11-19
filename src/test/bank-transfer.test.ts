@@ -1,5 +1,11 @@
 import { describe, expect, it } from "vitest";
-import { BANK_TRANSFER_DETAILS, MAX_RECEIPT_BYTES, bankReceiptSchema } from "@/lib/bank-transfer";
+import {
+  BANK_TRANSFER_DETAILS,
+  MAX_RECEIPT_BYTES,
+  bankReceiptSchema,
+  buildSalesWhatsAppUrl,
+  normalizeWhatsAppNumber,
+} from "@/lib/bank-transfer";
 
 const validReceipt = {
   customerName: "בנייה מתקדמת בע״מ",
@@ -49,5 +55,25 @@ describe("Bank transfer details & receipt validation", () => {
         fileSize: MAX_RECEIPT_BYTES + 1,
       }).success,
     ).toBe(false);
+  });
+
+  it("normalizes Israeli phone numbers and builds a pre-filled sales WhatsApp link", () => {
+    expect(normalizeWhatsAppNumber("050-123-4567")).toBe("972501234567");
+    expect(normalizeWhatsAppNumber("+972 52 7654321")).toBe("972527654321");
+
+    const url = buildSalesWhatsAppUrl({
+      phone: "050-9876543",
+      customerName: "משה כהן",
+      orderOrPhone: "4512",
+      amount: "1200",
+      reference: "AB12CD34",
+    });
+
+    expect(url.startsWith("https://wa.me/972509876543?text=")).toBe(true);
+    const decoded = decodeURIComponent(url.split("?text=")[1] ?? "");
+    expect(decoded).toContain("העברה בנקאית");
+    expect(decoded).toContain("289134");
+    expect(decoded).toContain("משה כהן");
+    expect(decoded).toContain("AB12CD34");
   });
 });
