@@ -28,3 +28,9 @@ use the editor.
   own key and store it in Secrets.
 - **Secrets.** Lovable manages them. Do not put secret values in the repo.
 <!-- LOVABLE:END -->
+
+## Application rules
+- Keep customer intake validation in a shared Zod schema used by both the browser and the server to reject invalid submissions consistently.
+- Customer intake is public insert-only through a server function; requests remain private in Cloud and never grant the requested contact permissions automatically.
+- Treat customer updates as review requests, never unauthenticated record mutations, to prevent impersonation.
+- Keep the registration steps in a focused component and all visual roles in the global design system for consistent mobile and desktop presentation.
