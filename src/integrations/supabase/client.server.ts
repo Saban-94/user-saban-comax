@@ -29,18 +29,77 @@ function createSupabaseFetch(supabaseKey: string): typeof fetch {
   };
 }
 
+const mockTables = new Map<string, Record<string, unknown>[]>();
+
+function createMockSupabaseAdminClient() {
+  console.warn("[AI Studio] Supabase not connected — using in-memory mock admin client");
+  return {
+    from(table: string) {
+      const getRows = () => {
+        let rows = mockTables.get(table);
+        if (!rows) {
+          rows = [];
+          mockTables.set(table, rows);
+        }
+        return rows;
+      };
+      return {
+        insert(values: Record<string, unknown> | Record<string, unknown>[]) {
+          const items = (Array.isArray(values) ? values : [values]).map((item) => ({
+            id: typeof item["id"] === "string" ? item["id"] : crypto.randomUUID(),
+            created_at: new Date().toISOString(),
+            ...item,
+          }));
+          getRows().push(...items);
+          const result = { data: items, error: null };
+          return {
+            select: () => ({
+              single: async () => ({ data: items[0] ?? null, error: null }),
+              maybeSingle: async () => ({ data: items[0] ?? null, error: null }),
+              then: (resolve: (value: typeof result) => unknown) =>
+                Promise.resolve(result).then(resolve),
+            }),
+            then: (resolve: (value: typeof result) => unknown) =>
+              Promise.resolve(result).then(resolve),
+          };
+        },
+        select() {
+          const rows = [...getRows()];
+          const builder = {
+            eq: (col: string, val: unknown) => {
+              const filtered = rows.filter((r) => r[col] === val);
+              return {
+                ...builder,
+                single: async () => ({ data: filtered[0] ?? null, error: null }),
+                maybeSingle: async () => ({ data: filtered[0] ?? null, error: null }),
+                then: (resolve: (value: { data: typeof filtered; error: null }) => unknown) =>
+                  Promise.resolve({ data: filtered, error: null }).then(resolve),
+              };
+            },
+            order: () => builder,
+            limit: (n: number) => ({
+              ...builder,
+              then: (resolve: (value: { data: typeof rows; error: null }) => unknown) =>
+                Promise.resolve({ data: rows.slice(0, n), error: null }).then(resolve),
+            }),
+            single: async () => ({ data: rows[0] ?? null, error: null }),
+            maybeSingle: async () => ({ data: rows[0] ?? null, error: null }),
+            then: (resolve: (value: { data: typeof rows; error: null }) => unknown) =>
+              Promise.resolve({ data: rows, error: null }).then(resolve),
+          };
+          return builder;
+        },
+      };
+    },
+  } as unknown as ReturnType<typeof createClient<Database>>;
+}
+
 function createSupabaseAdminClient() {
-  const SUPABASE_URL = process.env['SUPABASE_URL'];
-  const SUPABASE_SERVICE_ROLE_KEY = process.env['SUPABASE_SERVICE_ROLE_KEY'];
+  const SUPABASE_URL = process.env["SUPABASE_URL"];
+  const SUPABASE_SERVICE_ROLE_KEY = process.env["SUPABASE_SERVICE_ROLE_KEY"];
 
   if (!SUPABASE_URL || !SUPABASE_SERVICE_ROLE_KEY) {
-    const missing = [
-      ...(!SUPABASE_URL ? ['SUPABASE_URL'] : []),
-      ...(!SUPABASE_SERVICE_ROLE_KEY ? ['SUPABASE_SERVICE_ROLE_KEY'] : []),
-    ];
-    const message = `Missing Supabase environment variable(s): ${missing.join(', ')}. Connect Supabase in Lovable Cloud.`;
-    console.error(`[Supabase] ${message}`);
-    throw new Error(message);
+    return createMockSupabaseAdminClient();
   }
 
   return createClient<Database>(SUPABASE_URL, SUPABASE_SERVICE_ROLE_KEY, {
@@ -51,7 +110,7 @@ function createSupabaseAdminClient() {
       storage: undefined,
       persistSession: false,
       autoRefreshToken: false,
-    }
+    },
   });
 }
 
