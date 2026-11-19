@@ -23,7 +23,6 @@ import {
   bankReceiptSchema,
 } from "@/lib/bank-transfer";
 import { uploadBankReceipt } from "@/lib/bank-transfer.functions";
-import presenterPhoto from "@/assets/images/saban_presenter_1795065827034.jpg";
 
 export const Route = createFileRoute("/bank-transfer")({
   head: () => ({
@@ -254,10 +253,11 @@ function BankTransferPage() {
           <div className="container bank-presenter-grid">
             <div className="presenter-frame">
               <img
-                src={presenterPhoto}
-                alt="נציגת מחלקת ההזמנות של ח. סבן מציגה את פרטי החשבון להעברה בנקאית"
+                src="/saban-brand.jpg"
+                alt="ח. סבן חומרי בניין — פרזנטציה להעברה בנקאית"
                 className="presenter-photo"
-                referrerPolicy="no-referrer"
+                width={1684}
+                height={2528}
               />
               <div className="presenter-caption">
                 <strong>מחלקת הזמנות — ח. סבן חומרי בניין (1994) בע״מ</strong>
